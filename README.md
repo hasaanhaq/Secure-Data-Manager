@@ -1,47 +1,99 @@
-# Secure Data Manager
+# 🔐 Secure Data Manager
 
-A **C++ Secure Data Manager** that encrypts and decrypts sensitive client information from a file. This project aims to create a structured and efficient system for managing sensitive data securely while maintaining ease of access and usability.
-
-## 🚀 Project Goals
-- **Encryption & Decryption**: Implement secure encryption and decryption mechanisms using **OpenSSL**.
-- **Fast Lookups**: Optimize data retrieval with **unordered_map**.
-- **User-Friendly Interface**: Design a **menu-based system** for users to:
-  - View encrypted and decrypted data.
-  - Add new entries.
-  - Delete entries.
-- **Separation of Concerns**: Structure the project with clear distinctions between:
-  - **Encryption/Decryption Module** (Handles security aspects)
-  - **Data Management Module** (Manages file operations and lookups)
-  - **Frontend (Future Plan)**: A **HTML, CSS, JavaScript UI** to interact with the backend.
-
-## 🔧 Technologies & Tools
-- **C++** for backend logic.
-- **OpenSSL** for encryption.
-- **Unordered_map** for efficient data management.
-- **HTML, CSS, JavaScript** for the frontend (planned).
-
-## 📝 Current Progress
-- [ ] Researching and setting up **OpenSSL** for encryption.
-- [ ] Implementing a structured **C++ header file (.hpp)**.
-- [ ] Developing the **file handling system**.
-- [ ] Designing the **CLI-based menu**.
-
-## 🎯 Future Enhancements
-- **Error handling & logging** for robustness.
-- **User authentication system** for additional security.
-- **Cross-platform compatibility** (Linux & Windows support).
-- **Front-end UI** to improve accessibility and user interaction.
-
-## 📌 Why This Project?
-This project is an opportunity to **deep dive into cryptography**, **low-level C++**, and **systems design** while creating something practical and resume-worthy. It also helps build **real-world skills** in handling sensitive data securely.
-
-## 📅 Roadmap
-1. **Complete the C++ backend** with a working encryption system.
-2. **Refine the data storage & retrieval mechanism**.
-3. **Implement a simple UI** for a seamless user experience.
-4. **Test & optimize performance** for large datasets.
-5. **Expand with authentication and security layers**.
+The **Secure Data Manager** is a C++ project designed to safely encrypt and decrypt sensitive client data using **OpenSSL**. This system is built to manage confidential records such as names and personal IDs, ensuring secure file storage and future compatibility with cloud-based databases such as **AWS DynamoDB** or **S3**.
 
 ---
-This README will be updated as the project evolves! 🚀
 
+## 🚀 Project Goals
+
+- **Encryption & Decryption**  
+  Secure all data at rest using **AES-256-CBC encryption** via OpenSSL, with support for line-by-line encryption and decryption.
+
+- **File-Based Storage (Current)**  
+  Encrypt and store records locally in a file-friendly base64 format. A **plaintext file** is processed into an **encrypted output file**, which can later be decrypted back to match the original.
+
+- **Modular Code Architecture**
+  - `encryption.hpp/.cpp`: Handles all cryptographic logic.
+  - `filehandler.cpp`: Manages reading, encrypting, writing, and decrypting from files.
+
+- **CLI-Based Interface (Upcoming)**  
+  A menu-driven interface for:
+  - Encrypting a file
+  - Decrypting a file
+  - Viewing individual records
+
+- **Cloud-Ready Design**  
+  While the current focus is on file-based systems, the project is being designed with future **cloud integration in mind**. The goal is to store encrypted data in services like:
+  - **AWS S3** for secure object storage
+  - **AWS DynamoDB** for fast, scalable access to encrypted records
+  - **AWS KMS** (Key Management Service) for future secure key storage
+
+---
+
+## 🛠 Technologies & Tools
+
+| Tech             | Purpose                                  |
+|------------------|------------------------------------------|
+| **C++17**         | Core language for system implementation |
+| **OpenSSL**       | Encryption and base64 encoding           |
+| **AWS (Planned)** | Cloud storage and key management         |
+| **HTML/CSS/JS**   | Future web-based interface               |
+
+---
+
+## ✅ Current Features
+
+- [x] AES-256-CBC encryption using OpenSSL
+- [x] IV prepending + base64 encoding for file-safe storage
+- [x] Decryption logic to validate encrypted file integrity
+- [x] End-to-end testing: `data.txt` → `encrypted.txt` → `decrypted.txt`
+
+---
+
+## 🧪 How It Works
+
+1. Input: Plaintext file `data.txt`  
+2. Each line is encrypted, IV-prepended, and base64-encoded  
+3. Output: Encrypted file `encrypted.txt`  
+4. Decryption reads `encrypted.txt`, extracts IV, decrypts data, and writes it to `decrypted.txt`  
+5. ✅ If `decrypted.txt` matches `data.txt`, you're good!
+
+---
+
+## 🎯 Future Enhancements
+
+- [ ] Add file-based decryption function
+- [ ] Implement CLI menu system
+- [ ] Abstract encryption key/IV management for better reuse
+- [ ] Cloud storage with AWS S3 or DynamoDB
+- [ ] Secure key management via AWS KMS or custom vault
+- [ ] Unit + integration testing
+- [ ] Web-based frontend interface using HTML/CSS/JS
+
+---
+
+## 📌 Why This Project?
+
+This project offers hands-on experience with:
+- Modern C++ practices
+- Practical cryptography with OpenSSL
+- Secure data handling
+- File I/O and base64 transformations
+- Laying groundwork for **cloud-native applications**
+
+---
+
+## 📅 Roadmap
+
+| Stage                      | Status   |
+|---------------------------|----------|
+| C++ encryption logic      | ✅ Done   |
+| File-based encryption     | ✅ Done   |
+| File-based decryption     | 🔄 In Progress |
+| CLI menu system           | 🔜 Next Step |
+| Cloud integration (AWS)   | 🔜 Future |
+| Web frontend              | 🔜 Future |
+
+---
+
+This README will continue to evolve as the project grows. Thanks for checking it out! 🚀

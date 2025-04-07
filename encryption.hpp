@@ -16,6 +16,8 @@
 #include <iostream>
 using namespace std;
 
+std::string encrypt(const std::string& plaintext);
+
 
 // std::string encryptData(const std::string& plaintext, const std::string& key, const std::string& iv);
 // std::string decryptData(const std::string& ciphertext, const std::string& key, const std::string& iv);

@@ -4,22 +4,27 @@
 using namespace std;
 
 
-void copyFile(const string& inputFile, const string& outputFile) {
-    ifstream inFile(inputFile);
-    ofstream outFile(outputFile);
+void encryptFile(const std::string& inputFile, const std::string& encryptedFile) {
+    std::ifstream inFile(inputFile);
+    std::ofstream outFile(encryptedFile);
 
-    if (inFile.is_open() && outFile.is_open()) {
-        string line;
-        while (getline(inFile, line)) {
-            outFile << line << "\n";
-        }
-        inFile.close();
-        outFile.close();
-        cout << "File Copy Success!" << endl;
-    } else {
-        cout << "ERROR opening file!" << endl;
+    if (!inFile.is_open() || !outFile.is_open()) {
+        cerr << "Error opening input or output file." << endl;
+        return;
     }
+
+    std::string line;
+    while (std::getline(inFile, line)) {
+        std::string encryptedLine = encrypt(line);
+        outFile << encryptedLine << '\n';
+    }
+
+    inFile.close();
+    outFile.close();
+
+    cout << "Encryption complete. Encrypted file saved to: " << encryptedFile << endl;
 }
+
 
 const unsigned int AES_KEY_LENGTH = 32;
 
