@@ -17,6 +17,8 @@
 using namespace std;
 
 std::string encrypt(const std::string& plaintext);
+void decryptFile(const std::string& encryptedFile, const std::string& decryptedFile);
+
 
 
 // std::string encryptData(const std::string& plaintext, const std::string& key, const std::string& iv);

@@ -213,62 +213,101 @@ std::string decrypt(const std::string& base64Ciphertext) {
 
 
 
-
-
-
-
-#include "encryption.hpp"
-#include <fstream>
-#include <vector>
-
-int main() {
-    const std::string inputFile = "data.txt";
-    const std::string encryptedFile = "encrypted.txt";
-
-    std::ifstream inFile(inputFile);
-    std::ofstream outFile(encryptedFile);
+void decryptFile(const std::string& encryptedFile, const std::string& decryptedFile) {
+    std::ifstream inFile(encryptedFile);
+    std::ofstream outFile(decryptedFile);
 
     if (!inFile.is_open() || !outFile.is_open()) {
-        std::cerr << "Failed to open input or output file." << std::endl;
-        return 1;
+        std::cerr << "Error opening encrypted or decrypted file." << std::endl;
+        return;
     }
 
-    std::vector<std::string> originalLines;
-    std::vector<std::string> encryptedLines;
-    std::vector<std::string> decryptedLines;
-
-    std::string line;
-    while (std::getline(inFile, line)) {
-        originalLines.push_back(line);
-
-        std::string encrypted = encrypt(line);
-        encryptedLines.push_back(encrypted);
-
-        outFile << encrypted << '\n';
+    std::string encryptedLine;
+    while (std::getline(inFile, encryptedLine)) {
+        std::string decryptedLine = decrypt(encryptedLine);
+        if (decryptedLine.empty()) {
+            std::cerr << "Warning: Decryption failed for a line." << std::endl;
+        }
+        outFile << decryptedLine << '\n';
     }
 
     inFile.close();
     outFile.close();
 
-    std::cout << "All lines encrypted and written to '" << encryptedFile << "'.\n" << std::endl;
+    std::cout << "Decryption complete. Output saved to '" << decryptedFile << "'." << std::endl;
+}
 
-    // Decrypt all encrypted lines and compare with original
+
+
+
+
+int main() {
+    const string inputFile = "data.txt";
+    const string encryptedFile = "encrypted.txt";
+    const string decryptedFile = "decrypted.txt";
+
+    // 🔐 Phase 1: Encrypt and save
+    ifstream inFile(inputFile);
+    ofstream outFile(encryptedFile);
+    if (!inFile || !outFile) {
+        cerr << "Error opening input or output file." << endl;
+        return 1;
+    }
+
+    string line;
+    vector<string> originalLines, encryptedLines;
+
+    while (getline(inFile, line)) {
+        originalLines.push_back(line);
+        string encrypted = encrypt(line);
+        encryptedLines.push_back(encrypted);
+        outFile << encrypted << '\n';
+    }
+
+    cout << "✅ Encrypted lines saved to '" << encryptedFile << "'\n";
+    inFile.close();
+    outFile.close();
+
+    // ✅ Optional: verify in-memory roundtrip
+    bool inMemoryOK = true;
     for (size_t i = 0; i < encryptedLines.size(); ++i) {
-        std::string decrypted = decrypt(encryptedLines[i]);
-        decryptedLines.push_back(decrypted);
-
-        cout << "==== Line " << i + 1 << " ====" << endl;
-        cout << "Original : " << originalLines[i] << endl;
-        cout << "Encrypted: " << encryptedLines[i] << endl;
-        cout << "Decrypted: " << decrypted << endl;
-
-        if (decrypted == originalLines[i]) {
-            std::cout << "✅ Match\n" << endl;
-        } else {
-            std::cout << "❌ Mismatch!\n" << endl;
+        if (decrypt(encryptedLines[i]) != originalLines[i]) {
+            cout << "❌ In-memory mismatch at line " << i + 1 << endl;
+            inMemoryOK = false;
         }
+    }
+    if (inMemoryOK) cout << "✅ In-memory encryption/decryption verified\n";
+
+    // 🔓 Phase 2: Decrypt file to output
+    decryptFile(encryptedFile, decryptedFile);
+    cout << "📄 Decrypted file written to '" << decryptedFile << "'\n";
+
+    // 🔍 Phase 3: Compare original and decrypted files
+    ifstream orig(inputFile), dec(decryptedFile);
+    string origLine, decLine;
+    size_t lineNum = 1;
+    bool filesMatch = true;
+
+    while (getline(orig, origLine) && getline(dec, decLine)) {
+        if (origLine != decLine) {
+            cout << "❌ File mismatch at line " << lineNum << endl;
+            filesMatch = false;
+        }
+        ++lineNum;
+    }
+
+    if (orig || dec) {
+        cout << "❌ Files are different lengths." << endl;
+        filesMatch = false;
+    }
+
+    if (filesMatch) {
+        cout << "✅ Final check passed: decrypted file matches original!" << endl;
+    } else {
+        cout << "⚠️ Final check failed: see mismatch warnings above." << endl;
     }
 
     return 0;
 }
+
 
